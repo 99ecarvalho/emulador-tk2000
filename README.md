@@ -24,6 +24,8 @@ What a program saves on tape (`SAVET` in BASIC, or any program using the ROM's t
 
 "Insert disk" puts a disk image (`.dsk`, `.do`, `.po` or `.nib`, Apple II formats) in the drive of the TK2000 disk interface (the Microdigital cartridge, a copy of the Apple Disk II controller: registers at `$C090-$C09F`, boot ROM at `$C100-$C1FF` while a disk is inserted). Boot it with `CALL 49408` (`$C100`). What the TK2000 writes on the disk is saved in the image file (a read-only file is a write-protected disk). "Eject disk" removes it. A disk image can also be given on the command line instead of a tape. TKDOS 3.3 (the TK2000's DOS, from the TK2000 emulator at https://github.com/apple-II/tk2000-emulator, `Outros/TKDOS2000.dsk`) boots and reads and writes files.
 
+"Scan lines" in the menu (or F7) turns on a light TV scan-line effect: the bottom part of each line of the picture 25% darker. It is off when the emulator starts.
+
 # Development
 
 I developed the emulator in MS Visual Studio Community 2022 (MSVC22). Make a clone of the repository and open the root directory in MSVC22 to be able to work on the sources.
@@ -82,6 +84,8 @@ Execute o binário. Para chamar o menu aperte F2 no teclado e use as setas direc
 O que um programa grava em fita (`SAVET` no BASIC, ou qualquer programa que use as rotinas de fita da ROM) é gravado: os blocos são acrescentados a `recorded.ct2`, ao lado da fita inserida (ou no diretório atual, se não houver fita). Insira `recorded.ct2` para carregá-los de volta com `LOADT`.
 
 "Insert disk" coloca uma imagem de disco (`.dsk`, `.do`, `.po` ou `.nib`, formatos do Apple II) no drive da interface de disco do TK2000 (o cartucho da Microdigital, cópia da controladora Disk II da Apple: registradores em `$C090-$C09F`, ROM de boot em `$C100-$C1FF` enquanto há um disco inserido). Dê o boot com `CALL 49408` (`$C100`). O que o TK2000 grava no disco é salvo no arquivo da imagem (um arquivo somente leitura é um disco protegido). "Eject disk" retira o disco. Uma imagem de disco também pode ser passada na linha de comando no lugar de uma fita. O TKDOS 3.3 (o DOS do TK2000, do emulador em https://github.com/apple-II/tk2000-emulator, `Outros/TKDOS2000.dsk`) dá boot, lê e grava arquivos.
+
+"Scan lines" no menu (ou F7) liga um efeito leve de linhas de varredura de TV: a parte de baixo de cada linha da imagem fica 25% mais escura. Começa desligado ao abrir o emulador.
 
 # Desenvolvimento
 

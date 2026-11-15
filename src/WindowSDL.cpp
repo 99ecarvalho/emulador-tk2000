@@ -31,6 +31,11 @@ void CWindowSDL::setScanline(bool val) noexcept {
 }
 
 /*****************************************************************************/
+bool CWindowSDL::getScanline() const noexcept {
+	return mScanLines;
+}
+
+/*****************************************************************************/
 void CWindowSDL::setFullScreen(bool val) noexcept {
 	mFullScreen = val;
 	SDL_SetWindowFullscreen(mWindow, mFullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
@@ -180,7 +185,12 @@ void CWindowSDL::render(bool cpuState, bool tapeState) {
 	for (int i = 0; i < VIDEOHEIGHT; i++) {
 		memcpy(ptr, fb, pitch);
 		ptr += pitch;
-		if (!mScanLines) {
+		if (mScanLines) {
+			// Light TV scan lines: the second row of each line 25% darker
+			for (int j = 0; j < pitch; j++) {
+				ptr[j] = (char)((byte)fb[j] * 75 / 100);
+			}
+		} else {
 			memcpy(ptr, fb, pitch);
 		}
 		ptr += pitch;

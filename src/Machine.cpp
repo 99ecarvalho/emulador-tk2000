@@ -20,7 +20,7 @@
 
 /* Constants */
 
-TMenuLst mainLst{ "Start", "Soft Reset (F5)", "Hard reset", "CPU speed", "Insert tape", "Play tape (F6)", "Rewind tape", "Record tape (WAV)", "Type BASIC file", "Insert disk", "Eject disk" };
+TMenuLst mainLst{ "Start", "Soft Reset (F5)", "Hard reset", "CPU speed", "Insert tape", "Play tape (F6)", "Rewind tape", "Record tape (WAV)", "Type BASIC file", "Insert disk", "Eject disk", "Scan lines (F7)" };
 TMenuLst cpuSpeedLst{ "1 MHz", "2 MHz", "Full speed" };
 TMenuLst filesLst{ "." };
 TMenuLst msgLst{ "OK" };
@@ -162,6 +162,7 @@ void CMachine::notify(SDL_KeyboardEvent& e) {
 				mWindow.setMenu(nullptr);
 			} else {
 				mMainMenu->getMenuLst()[0] = mCpuPaused ? "Start" : "Pause";
+				mMainMenu->getMenuLst()[11] = mWindow.getScanline() ? "Scan lines: on (F7)" : "Scan lines: off (F7)";
 				mWindow.setMenu(mMainMenu);
 			}
 			processed = true;
@@ -303,6 +304,10 @@ bool CMachine::loop() {
 
 				case 10:							// Eject disk
 					mDisk.eject();
+					break;
+
+				case 11:							// Scan lines: light TV effect, off by default
+					mWindow.setScanline(!mWindow.getScanline());
 					break;
 				}
 			} else if (mWindow.getMenu() == mCpuMenu) {

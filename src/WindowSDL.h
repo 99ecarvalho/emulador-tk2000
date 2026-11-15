@@ -43,7 +43,6 @@ private:
 	SDL_Rect mGlassRect{};				// Bounding box of the transparent glass area in mFrame
 	bool mShowFrame{ false };
 private:
-	void setScanline(bool val) noexcept;
 	void setFullScreen(bool val) noexcept;
 	void setShowFrame(bool val) noexcept;
 	void loadFrame();
@@ -52,6 +51,8 @@ public:
 	~CWindowSDL();
 	// Native
 	void render(bool cpuState, bool tapeState);
+	void setScanline(bool val) noexcept;
+	bool getScanline() const noexcept;
 	bool loop();
 	SDL_Window* getWindow() const;
 	SDL_Renderer* getRenderer() const;
