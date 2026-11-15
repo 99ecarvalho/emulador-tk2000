@@ -20,7 +20,7 @@
 
 /* Constants */
 
-TMenuLst mainLst{ "Start", "Soft Reset (F5)", "Hard reset", "CPU speed", "Insert tape", "Play tape (F6)", "Rewind tape", "Record tape (WAV)", "Type BASIC file", "Insert disk", "Eject disk", "Scan lines (F7)" };
+TMenuLst mainLst{ "Start", "Soft Reset (F5)", "Hard reset", "CPU speed", "Insert tape", "Play tape (F6)", "Rewind tape", "Record tape (WAV)", "Type BASIC file", "Insert disk", "Eject disk", "Scan lines (F7)", "Frame (F9)" };
 TMenuLst cpuSpeedLst{ "1 MHz", "2 MHz", "Full speed" };
 TMenuLst filesLst{ "." };
 TMenuLst msgLst{ "OK" };
@@ -163,6 +163,8 @@ void CMachine::notify(SDL_KeyboardEvent& e) {
 			} else {
 				mMainMenu->getMenuLst()[0] = mCpuPaused ? "Start" : "Pause";
 				mMainMenu->getMenuLst()[11] = mWindow.getScanline() ? "Scan lines: on (F7)" : "Scan lines: off (F7)";
+				mMainMenu->getMenuLst()[12] = mWindow.getFrameMode() == EFrameMode::Full ? "Frame: TK2000 and monitor (F9)" :
+					mWindow.getFrameMode() == EFrameMode::Monitor ? "Frame: monitor (F9)" : "Frame: off (F9)";
 				mWindow.setMenu(mMainMenu);
 			}
 			processed = true;
@@ -308,6 +310,10 @@ bool CMachine::loop() {
 
 				case 11:							// Scan lines: light TV effect, off by default
 					mWindow.setScanline(!mWindow.getScanline());
+					break;
+
+				case 12:							// Frame: TK2000 and monitor, monitor only, off
+					mWindow.nextFrameMode();
 					break;
 				}
 			} else if (mWindow.getMenu() == mCpuMenu) {

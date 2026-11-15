@@ -24,6 +24,10 @@
 class CVideo;
 
 /*************************************************************************************************/
+// Picture around the screen: the TK2000 with its monitor, the monitor and the TK2000 label only, none
+enum class EFrameMode { Full, Monitor, Off };
+
+/*************************************************************************************************/
 class CWindowSDL final : public CSubject<SDL_KeyboardEvent> {
 private:
 	SDL_Window* mWindow{};
@@ -42,9 +46,10 @@ private:
 	int mFrameH{ 0 };
 	SDL_Rect mGlassRect{};				// Bounding box of the transparent glass area in mFrame
 	bool mShowFrame{ false };
+	EFrameMode mFrameMode{ EFrameMode::Off };
+	SDL_Rect mFrameView{};				// Part of mFrame shown: all of it, or the monitor and the TK2000 label
 private:
 	void setFullScreen(bool val) noexcept;
-	void setShowFrame(bool val) noexcept;
 	void loadFrame();
 public:
 	CWindowSDL(CVideo& video);
@@ -53,6 +58,9 @@ public:
 	void render(bool cpuState, bool tapeState);
 	void setScanline(bool val) noexcept;
 	bool getScanline() const noexcept;
+	void setFrameMode(EFrameMode mode) noexcept;
+	EFrameMode getFrameMode() const noexcept;
+	void nextFrameMode() noexcept;
 	bool loop();
 	SDL_Window* getWindow() const;
 	SDL_Renderer* getRenderer() const;

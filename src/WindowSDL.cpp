@@ -42,10 +42,18 @@ void CWindowSDL::setFullScreen(bool val) noexcept {
 }
 
 /*****************************************************************************/
-void CWindowSDL::setShowFrame(bool val) noexcept {
-	mShowFrame = val && mFrame != nullptr;
-	int w = mShowFrame ? mFrameW : VIDEOWIDTH * 2;
-	int h = mShowFrame ? mFrameH : VIDEOHEIGHT * 2;
+void CWindowSDL::setFrameMode(EFrameMode mode) noexcept {
+	mFrameMode = mFrame != nullptr ? mode : EFrameMode::Off;
+	mShowFrame = mFrameMode != EFrameMode::Off;
+	// Monitor only: from just above the monitor to the TK2000 label, before the keys
+	// (tk2000-frame.png coordinates, limited to the picture)
+	mFrameView = { 0, 0, mFrameW, mFrameH };
+	if (mFrameMode == EFrameMode::Monitor) {
+		SDL_Rect monitor{ 240, 20, 1120, 746 };
+		SDL_IntersectRect(&monitor, &mFrameView, &mFrameView);
+	}
+	int w = mShowFrame ? mFrameView.w : VIDEOWIDTH * 2;
+	int h = mShowFrame ? mFrameView.h : VIDEOHEIGHT * 2;
 	// Render at a fixed logical resolution, SDL scales it to the window size keeping the aspect ratio
 	SDL_RenderSetLogicalSize(mRenderer, w, h);
 	// Smooth scaling for the screen inside the frame, sharp pixels otherwise
@@ -60,6 +68,23 @@ void CWindowSDL::setShowFrame(bool val) noexcept {
 			winW = winH * w / h;
 		}
 		SDL_SetWindowSize(mWindow, winW, winH);
+		// Centered, so a taller window does not go below the screen
+		int display = SDL_GetWindowDisplayIndex(mWindow);
+		SDL_SetWindowPosition(mWindow, SDL_WINDOWPOS_CENTERED_DISPLAY(display), SDL_WINDOWPOS_CENTERED_DISPLAY(display));
+	}
+}
+
+/*****************************************************************************/
+EFrameMode CWindowSDL::getFrameMode() const noexcept {
+	return mFrameMode;
+}
+
+/*****************************************************************************/
+void CWindowSDL::nextFrameMode() noexcept {
+	switch (mFrameMode) {
+	case EFrameMode::Full:		setFrameMode(EFrameMode::Monitor); break;
+	case EFrameMode::Monitor:	setFrameMode(EFrameMode::Off); break;
+	case EFrameMode::Off:		setFrameMode(EFrameMode::Full); break;
 	}
 }
 
@@ -157,7 +182,7 @@ CWindowSDL::CWindowSDL(CVideo& video) :
 	SDL_FreeSurface(surface);
 	// Optional frame picture; without it, only the screen is shown
 	loadFrame();
-	setShowFrame(true);
+	setFrameMode(EFrameMode::Full);
 }
 
 /*****************************************************************************/
@@ -240,13 +265,15 @@ void CWindowSDL::render(bool cpuState, bool tapeState) {
 	if (mShowFrame) {
 		// Dark CRT glass, picture with some overscan margin, frame on top hides the glass corners.
 		// The picture is added to the glass color, so its black is exactly the glass color.
+		// (in the shown part of the frame picture)
+		SDL_Rect glass{ mGlassRect.x - mFrameView.x, mGlassRect.y - mFrameView.y, mGlassRect.w, mGlassRect.h };
 		SDL_SetRenderDrawColor(mRenderer, 16, 20, 18, SDL_ALPHA_OPAQUE);
-		SDL_RenderFillRect(mRenderer, &mGlassRect);
-		SDL_Rect pic{ mGlassRect.x + mGlassRect.w * 6 / 100, mGlassRect.y + mGlassRect.h * 7 / 100,
-			mGlassRect.w * 88 / 100, mGlassRect.h * 86 / 100 };
+		SDL_RenderFillRect(mRenderer, &glass);
+		SDL_Rect pic{ glass.x + glass.w * 6 / 100, glass.y + glass.h * 7 / 100,
+			glass.w * 88 / 100, glass.h * 86 / 100 };
 		SDL_SetTextureBlendMode(mTarget, SDL_BLENDMODE_ADD);
 		SDL_RenderCopy(mRenderer, mTarget, nullptr, &pic);
-		SDL_RenderCopy(mRenderer, mFrame, nullptr, nullptr);
+		SDL_RenderCopy(mRenderer, mFrame, &mFrameView, nullptr);
 	} else {
 		SDL_SetTextureBlendMode(mTarget, SDL_BLENDMODE_NONE);
 		SDL_RenderCopy(mRenderer, mTarget, nullptr, nullptr);
@@ -302,7 +329,7 @@ bool CWindowSDL::loop() {
 				break;
 
 			case SDLK_F9:
-				setShowFrame(!mShowFrame);
+				nextFrameMode();
 				processed = true;
 				break;
 

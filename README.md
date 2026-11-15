@@ -26,6 +26,8 @@ What a program saves on tape (`SAVET` in BASIC, or any program using the ROM's t
 
 "Scan lines" in the menu (or F7) turns on a light TV scan-line effect: the bottom part of each line of the picture 25% darker. It is off when the emulator starts.
 
+"Frame" in the menu (or F9) changes the picture around the screen: the TK2000 with its monitor (at start), the monitor and the TK2000 label only (without the keyboard), or none.
+
 # Development
 
 I developed the emulator in MS Visual Studio Community 2022 (MSVC22). Make a clone of the repository and open the root directory in MSVC22 to be able to work on the sources.
@@ -86,6 +88,8 @@ O que um programa grava em fita (`SAVET` no BASIC, ou qualquer programa que use 
 "Insert disk" coloca uma imagem de disco (`.dsk`, `.do`, `.po` ou `.nib`, formatos do Apple II) no drive da interface de disco do TK2000 (o cartucho da Microdigital, cópia da controladora Disk II da Apple: registradores em `$C090-$C09F`, ROM de boot em `$C100-$C1FF` enquanto há um disco inserido). Dê o boot com `CALL 49408` (`$C100`). O que o TK2000 grava no disco é salvo no arquivo da imagem (um arquivo somente leitura é um disco protegido). "Eject disk" retira o disco. Uma imagem de disco também pode ser passada na linha de comando no lugar de uma fita. O TKDOS 3.3 (o DOS do TK2000, do emulador em https://github.com/apple-II/tk2000-emulator, `Outros/TKDOS2000.dsk`) dá boot, lê e grava arquivos.
 
 "Scan lines" no menu (ou F7) liga um efeito leve de linhas de varredura de TV: a parte de baixo de cada linha da imagem fica 25% mais escura. Começa desligado ao abrir o emulador.
+
+"Frame" no menu (ou F9) muda a imagem em volta da tela: o TK2000 com o monitor (ao abrir), só o monitor e a faixa TK2000 (sem o teclado), ou nenhuma.
 
 # Desenvolvimento
 
