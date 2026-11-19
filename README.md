@@ -28,6 +28,8 @@ What a program saves on tape (`SAVET` in BASIC, or any program using the ROM's t
 
 "Frame" in the menu (or F9) changes the picture around the screen: the TK2000 with its monitor (at start), the monitor and the TK2000 label only (without the keyboard), or none.
 
+"Display" in the menu (or F10) cycles colour TV, white monochrome monitor and green monochrome monitor. On a monochrome monitor the text, which the TK2000 draws on the graphics screen, has no colour fringes, whatever the program selects with the colour switch ($C050/$C051).
+
 # Development
 
 I developed the emulator in MS Visual Studio Community 2022 (MSVC22). Make a clone of the repository and open the root directory in MSVC22 to be able to work on the sources.
@@ -90,6 +92,8 @@ O que um programa grava em fita (`SAVET` no BASIC, ou qualquer programa que use 
 "Scan lines" no menu (ou F7) liga um efeito leve de linhas de varredura de TV: a parte de baixo de cada linha da imagem fica 25% mais escura. Começa desligado ao abrir o emulador.
 
 "Frame" no menu (ou F9) muda a imagem em volta da tela: o TK2000 com o monitor (ao abrir), só o monitor e a faixa TK2000 (sem o teclado), ou nenhuma.
+
+"Display" no menu (ou F10) alterna TV em cores, monitor monocromático branco e monitor monocromático verde. No monitor monocromático o texto, que o TK2000 desenha na tela gráfica, fica sem as franjas de cor, qualquer que seja a cor escolhida pelo programa ($C050/$C051).
 
 # Desenvolvimento
 
